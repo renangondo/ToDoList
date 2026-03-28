@@ -15,12 +15,15 @@ const Form = () => {
     }
 
     const salvar = () => {
+
         const toDoList = {
             id:Date.now(),
             texto : texto,
             status:false
         }
-        localStorage.setItem("lista-tarefas",JSON.stringify(toDoList))
+        let lista = JSON.parse(localStorage.getItem("lista-tarefas")) || []
+        lista.push(toDoListgit)
+        localStorage.setItem("lista-tarefas",JSON.stringify(lista))
         navigate("/")
     }
 

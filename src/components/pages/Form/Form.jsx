@@ -1,30 +1,46 @@
 import react, { useEffect, useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { getTarefas, salvarTarefas } from "../../services/tarefaService";
 
 const Form = () => {
 
     const [texto, setTexto] = useState("");
     const navigate = useNavigate();
+    const {id} = useParams();
 
     useEffect(()=> {
-        console.log("UEF:"+texto)
-    }, [texto])
+        if(id) {
+            const  lista = getTarefas
+            const tarefa = lista.find(item => item.id == id)
+            if(tarefa){
+                setTexto(tarefa.texto)
+            }
+            
+        }
+    }, [id])
 
     const alterar = (e)=> {
         setTexto(e.target.value);
     }
 
     const salvar = () => {
+        let lista = getTarefas()
 
-        const toDoList = {
-            id:Date.now(),
-            texto : texto,
-            status:false
+        if(id){
+            lista = lista.map(item => item.id == id ? {...item, texto:texto}: item)
+
+        }else{
+            const toDoList = {
+                id: Date.now(),
+                texto: texto,
+                status: false
+            }
+            lista.push(toDoList)
         }
-        let lista = JSON.parse(localStorage.getItem("lista-tarefas")) || []
-        lista.push(toDoListgit)
-        localStorage.setItem("lista-tarefas",JSON.stringify(lista))
+        salvarTarefas(lista)
         navigate("/")
+
+
     }
 
     return(
